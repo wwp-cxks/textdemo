@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<header>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script>
+        function func() {
+            var oUsername = document.getElementById("username");
+            var oUsernameSpan = document.getElementById("username_span");
+
+            // 拿到输入框的内容
+            var oValue = oUsername.value;
+
+            // 判断
+            // 1.用户名长度是否符合要求
+            if (oValue.length < 6 || oValue.length > 18) {
+                oUsernameSpan.innerHTML = "！长度为6~18个字符";
+            }
+            //2.首字符是否是字母
+            else if (!isABC(oValue[0])) {
+                oUsernameSpan.innerHTML = "！必须以英文名开头";
+            }
+            // 3.是否都是数字、字母、下划线组成
+            else {
+                // var isYes = true;
+                for (var i = 0; i < oValue.length; i++) {
+                    if (!isDEF(oValue[i])) {
+                        // isYes = false;
+                        oUsernameSpan.innerHTML = "！必须由数字、字母、下划线组成";
+                        // break;
+                    }
+                    else {
+                        oUsernameSpan.innerHTML = "√";
+                    }
+                }
+                // if (isYes) {
+                //     oUsernameSpan.innerHTML = "√";
+                // }
+                // else {
+                //     oUsernameSpan.innerHTML = "！必须由数字、字母、下划线组成";
+                // }
+            }
+        }
+
+        // 函数 判断是否是字母
+        function isABC(charstr) {
+            if (charstr >= 'a' && charstr <= 'z' || charstr >= 'A' && charstr <= 'Z') {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        // 函数 判断是否是数字、字母、下划线
+        function isDEF(charstr) {
+            if (charstr >= 'a' && charstr <= 'z' || charstr >= 'A' && charstr <= 'Z' || charstr >= '0' && charstr <= '9' || charstr == '_') {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    </script>
+    <style>
+        .div {
+            margin: 50px auto 0;
+            padding: 15px 20px;
+            height: 300px;
+            width: 280px;
+            background-color: pink;
+        }
+
+        #username,
+        #password {
+            height: 20px;
+            width: 200px;
+            /* 去除蓝色边框 */
+            outline: none;
+        }
+
+        #username_span {
+            font-size: 14px;
+            color: red;
+        }
+    </style>
+</header>
+
+<body>
+    <div class="div">
+
+        <!-- onblur 失去焦点 -->
+
+        用户名：<input id='username' type="text" placeholder='请输入用户名' onblur="func();" />
+        <span id='username_span'>6~18个字符，可使用字母、数字、下划线，需要以字母开头</span>
+        <br>
+        密 &nbsp;&nbsp;码：<input id='password' type="text" placeholder='请输入用户密码' />
+    </div>
+</body>
+
+</html>

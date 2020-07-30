@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        #div1 {
+            position: relative;
+            width: 400px;
+            height: 400px;
+            margin: 0 auto;
+            border: 1px solid black;
+        }
+
+        #ball {
+            position: absolute;
+            left: 200px;
+            bottom: 20px;
+            height: 20px;
+            width: 20px;
+            background-color: red;
+            border-radius: 50%;
+        }
+
+        #bat {
+            width: 80px;
+            height: 15px;
+            background-color: blue;
+            position: absolute;
+            bottom: 0px;
+            left: 170px;
+        }
+
+        #brick div {
+            /* position: absolute; */
+            width: 78px;
+            height: 20px;
+            border: 1px solid black;
+            float: left;
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            var oBall = document.getElementById("ball");
+            var oBat = document.getElementById("bat");
+            var oBrick = document.getElementById("brick");
+            var oBricks = oBrick.getElementsByTagName("div");
+
+            drag(oBat);
+            creatBrick(40);
+
+            var speedX = parseInt(Math.random() * 3) + 4;
+            var speedY = parseInt(Math.random() * 3) + 5;
+
+            setInterval(function () {
+                oBall.style.left = oBall.offsetLeft + speedX + "px";
+                oBall.style.top = oBall.offsetTop + speedY + "px";
+
+                if (oBall.offsetLeft <= 0 || oBall.offsetLeft >= 380) {
+                    speedX *= -1;
+                }
+                if (oBall.offsetTop <= 0) {
+                    speedY *= -1;
+                }
+                if (!knock(oBall, oBat)) {
+                    speedY *= -1;
+                }
+                for (var i = 0; i < oBricks.length; i++) {
+                    if (!knock(oBall, oBricks[i])) {
+                        oBrick.removeChild(oBricks[i]);
+                        speedY *= -1;
+                    }
+                }
+                if (oBall.offsetTop >= 380) {
+                    // clearInterval(timer);
+                    alert("GAME OVER!");
+                    location.reload(); //重新刷新当前页面
+                }
+            }, 30);
+        }
+
+        // 碰撞
+        function knock(node1, node2) {
+            var l1 = node1.offsetLeft;
+            var l2 = node1.offsetLeft + node1.offsetWidth;
+            var t1 = node1.offsetTop;
+            var t2 = node1.offsetTop + node1.offsetHeight;
+
+            var p1 = node2.offsetLeft;
+            var p2 = node2.offsetLeft + node2.offsetWidth;
+            var r1 = node2.offsetTop;
+            var r2 = node2.offsetTop + node2.offsetHeight;
+
+            if (p1 > l2 || p2 < l1 || r2 < t1 || r1 > t2) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+        // 拖拽
+        function drag(node) {
+            node.onmousedown = function (ev) {
+                var e = ev || window.onload;
+                var offsetX = e.clientX - node.offsetLeft;
+
+                document.onmousemove = function (ev) {
+                    var e = ev || window.onload;
+                    var l = e.clientX - offsetX;
+
+                    if (l <= 0) {
+                        l = 0;
+                    }
+                    if (l >= 320) {
+                        l = 320;
+                    }
+                    node.style.left = l + "px";
+                }
+            }
+
+            document.onmouseup = function () {
+                document.onmousemove = null;
+            }
+        }
+        // 创建砖块
+        function creatBrick(n) {
+            var oBrick = document.getElementById("brick");
+            var oBricks = oBrick.getElementsByTagName("div");
+
+            for (var i = 0; i < n; i++) {
+                var node = document.createElement("div");
+                node.style.backgroundColor = randomColor();
+                oBrick.appendChild(node);
+            }
+            /*
+            相对定位转绝对定位
+            1、如果砖块点击以后消失不见，其他的砖块位置不受影响，那么我们必须使用绝对定位。
+            2、创建的砖块，使用相对定位非常方便
+         */
+            //相对定位 => 绝对定位 (文档流的转换)
+            for (var i = 0; i < n; i++) {
+                oBricks[i].style.left = oBricks[i].offsetLeft + "px";
+                oBricks[i].style.top = oBricks[i].offsetTop + "px";
+            }
+            //必须当前所有的div拥有坐标以后，才能将position = absolute
+            for (var i = 0; i < n; i++) {
+                oBricks[i].style.position = "absolute";
+            }
+        }
+
+
+        function randomColor() {
+            var color = ("rgb(" + parseInt(Math.random() * 256) + "," + parseInt(Math.random() * 256) + "," + parseInt(Math.random() * 256) + ")");
+            return color;
+        }
+    </script>
+</head>
+
+<body>
+    <div id="div1">
+        <div id='ball'></div>
+        <div id='bat'></div>
+        <div id='brick'>
+            <!-- <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div> -->
+        </div>
+    </div>
+</body>
+
+</html>

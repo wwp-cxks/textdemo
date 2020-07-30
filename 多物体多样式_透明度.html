@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        div {
+            width: 60px;
+            height: 60px;
+            background-color: red;
+            margin: 30px;
+            opacity: 30%;
+            filter: alpha(opacity=30);
+        }
+    </style>
+    <script>
+        window.onload = function () {
+            var oDivs = document.getElementsByTagName("div");
+
+            oDivs[0].onmouseover = function () {
+                startmove(this, "width", 200);
+            }
+
+            oDivs[1].onmouseover = function () {
+                startmove(this, "height", 200);
+            }
+            oDivs[2].onmouseover = function () {
+                startmove(this, "margin-left", 200);
+            }
+
+            oDivs[3].onmouseover = function () {
+                startmove(this, "font-size", 50);
+            }
+
+            oDivs[4].onmouseover = function () {
+                startmove(this, "opacity", 100);
+            }
+            oDivs[4].onmouseout = function () {
+                startmove(this, "opacity", 30);
+            }
+        }
+
+        function startmove(node, attr, iTarget) {
+            clearInterval(node.timer);
+
+            node.timer = setInterval(function () {
+                if (attr == "opacity") {
+                    var icurr = parseInt(parseFloat(getStyle(node, attr)) * 100);
+                } else {
+                    var icurr = parseInt(getStyle(node, attr));
+                }
+                var speed = (iTarget - icurr) / 8;
+                speed = speed > 0 ? Math.ceil(speed) : Math.floor(speed);
+
+                // if (attr == opacity) {
+                //     node.style[attr] = (icurr + speed) / 100;
+                // } else {
+                if (icurr == iTarget) {
+                    clearInterval(node.timer);
+                } else {
+                    if (attr == "opacity") {
+                        node.style.opacity = (icurr + speed) / 100;
+                        document.title = node.style.opacity;
+                    }
+                    else {
+                        node.style[attr] = icurr + speed + "px";
+                    }
+                }
+            }, 30);
+        }
+
+        function getStyle(node, cssStr) {
+            return node.currentStyle ? node.currentStyle[cssStr] : getComputedStyle(node)[cssStr];
+        }
+    </script>
+</head>
+
+<body>
+    <div></div>
+    <div></div>
+    <div></div>
+    <div>文本</div>
+    <div></div>
+</body>
+
+</html>
